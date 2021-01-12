@@ -151,7 +151,7 @@
       type(fieldtype), intent(in) :: field
       real(KIND=r8_kind), intent(inout) :: data
       integer, intent(in), optional :: tindex
-      real, dimension(1) :: data_tmp
+      real(KIND=r8_kind), dimension(1) :: data_tmp
 
       data_tmp(1)=data
       call read_record_r8( unit, field, 1, data_tmp, tindex )
@@ -230,7 +230,7 @@
       type(fieldtype), intent(in) :: field
       real(KIND=r4_kind), intent(inout) :: data
       integer, intent(in), optional :: tindex
-      real, dimension(1) :: data_tmp
+      real(KIND=r4_kind), dimension(1) :: data_tmp
 
       data_tmp(1)=data
       call read_record_r4( unit, field, 1, data_tmp, tindex )
