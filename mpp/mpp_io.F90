@@ -910,17 +910,22 @@ type :: atttype
   end interface
 
   interface mpp_write
-     module procedure mpp_write_2ddecomp_r2d
-     module procedure mpp_write_2ddecomp_r3d
-     module procedure mpp_write_2ddecomp_r4d
+     module procedure mpp_write_2ddecomp_r2d_r8
+     module procedure mpp_write_2ddecomp_r3d_r8
+     module procedure mpp_write_2ddecomp_r4d_r8
      module procedure mpp_write_2ddecomp_r2d_r4
      module procedure mpp_write_2ddecomp_r3d_r4
      module procedure mpp_write_2ddecomp_r4d_r4
-     module procedure mpp_write_r0D
-     module procedure mpp_write_r1D
-     module procedure mpp_write_r2D
-     module procedure mpp_write_r3D
-     module procedure mpp_write_r4D
+     module procedure mpp_write_r0D_r8
+     module procedure mpp_write_r1D_r8
+     module procedure mpp_write_r2D_r8
+     module procedure mpp_write_r3D_r8
+     module procedure mpp_write_r4D_r8
+     module procedure mpp_write_r0D_r4
+     module procedure mpp_write_r1D_r4
+     module procedure mpp_write_r2D_r4
+     module procedure mpp_write_r3D_r4
+     module procedure mpp_write_r4D_r4
      module procedure mpp_write_axis
   end interface
 
@@ -966,9 +971,12 @@ type :: atttype
 !  </NOTE>
 ! </INTERFACE>
   interface mpp_write_compressed
-     module procedure mpp_write_compressed_r1d
-     module procedure mpp_write_compressed_r2d
-     module procedure mpp_write_compressed_r3d
+     module procedure mpp_write_compressed_r1d_r8
+     module procedure mpp_write_compressed_r2d_r8
+     module procedure mpp_write_compressed_r3d_r8
+     module procedure mpp_write_compressed_r1d_r4
+     module procedure mpp_write_compressed_r2d_r4
+     module procedure mpp_write_compressed_r3d_r4
   end interface mpp_write_compressed
 
 !***********************************************************************

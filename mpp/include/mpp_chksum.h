@@ -24,8 +24,8 @@ function MPP_CHKSUM_( var, pelist , mask_val)
   !optional mask_val is masked away in checksum_int.h function via PACK()
   integer(i8_kind) :: MPP_CHKSUM_
   integer(MPP_TRANSFER_KIND_) :: mold(1)
-      MPP_TYPE_, intent(in) :: var MPP_RANK_
-      integer, intent(in), optional :: pelist(:)
+  MPP_TYPE_, intent(in) :: var MPP_RANK_
+  integer, intent(in), optional :: pelist(:)
   MPP_TYPE_, intent(in),optional :: mask_val
 
   if ( PRESENT(mask_val) ) then

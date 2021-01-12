@@ -1098,15 +1098,15 @@
 !                                                                      !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #undef WRITE_RECORD_
-#define WRITE_RECORD_ write_record_default
+#define WRITE_RECORD_ write_record_r8
 #undef MPP_WRITE_2DDECOMP_2D_
-#define MPP_WRITE_2DDECOMP_2D_ mpp_write_2ddecomp_r2d
+#define MPP_WRITE_2DDECOMP_2D_ mpp_write_2ddecomp_r2d_r8
 #undef MPP_WRITE_2DDECOMP_3D_
-#define MPP_WRITE_2DDECOMP_3D_ mpp_write_2ddecomp_r3d
+#define MPP_WRITE_2DDECOMP_3D_ mpp_write_2ddecomp_r3d_r8
 #undef MPP_WRITE_2DDECOMP_4D_
-#define MPP_WRITE_2DDECOMP_4D_ mpp_write_2ddecomp_r4d
+#define MPP_WRITE_2DDECOMP_4D_ mpp_write_2ddecomp_r4d_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real(r8_kind)
+#define MPP_TYPE_ real(KIND=r8_kind)
 #include <mpp_write_2Ddecomp.h>
 
 #undef WRITE_RECORD_
@@ -1118,17 +1118,31 @@
 #undef MPP_WRITE_2DDECOMP_4D_
 #define MPP_WRITE_2DDECOMP_4D_ mpp_write_2ddecomp_r4d_r4
 #undef MPP_TYPE_
-#define MPP_TYPE_ real(r4_kind)
+#define MPP_TYPE_ real(KIND=r4_kind)
 #include <mpp_write_2Ddecomp.h>
 
 #undef MPP_WRITE_COMPRESSED_1D_
-#define MPP_WRITE_COMPRESSED_1D_ mpp_write_compressed_r1d
+#define MPP_WRITE_COMPRESSED_1D_ mpp_write_compressed_r1d_r8
 #undef MPP_WRITE_COMPRESSED_2D_
-#define MPP_WRITE_COMPRESSED_2D_ mpp_write_compressed_r2d
+#define MPP_WRITE_COMPRESSED_2D_ mpp_write_compressed_r2d_r8
 #undef MPP_WRITE_COMPRESSED_3D_
-#define MPP_WRITE_COMPRESSED_3D_ mpp_write_compressed_r3d
+#define MPP_WRITE_COMPRESSED_3D_ mpp_write_compressed_r3d_r8
+#undef WRITE_RECORD_
+#define WRITE_RECORD_ write_record_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
+#include <mpp_write_compressed.h>
+
+#undef MPP_WRITE_COMPRESSED_1D_
+#define MPP_WRITE_COMPRESSED_1D_ mpp_write_compressed_r1d_r4
+#undef MPP_WRITE_COMPRESSED_2D_
+#define MPP_WRITE_COMPRESSED_2D_ mpp_write_compressed_r2d_r4
+#undef MPP_WRITE_COMPRESSED_3D_
+#define MPP_WRITE_COMPRESSED_3D_ mpp_write_compressed_r3d_r4
+#undef WRITE_RECORD_
+#define WRITE_RECORD_ write_record_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
 #include <mpp_write_compressed.h>
 
 #undef MPP_WRITE_UNLIMITED_AXIS_1D_
@@ -1138,51 +1152,101 @@
 #include <mpp_write_unlimited_axis.h>
 
 #undef MPP_WRITE_
-#define MPP_WRITE_ mpp_write_r0D
+#define MPP_WRITE_ mpp_write_r0D_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
 #undef MPP_RANK_
 #define MPP_RANK_ !
 #undef MPP_WRITE_RECORD_
-#define MPP_WRITE_RECORD_ call write_record_default( unit, field, 1, (/data/), tstamp)
+#define MPP_WRITE_RECORD_ write_record_r8( unit, field, 1, (/data/), tstamp)
 #include <mpp_write.h>
 
 #undef MPP_WRITE_
-#define MPP_WRITE_ mpp_write_r1D
+#define MPP_WRITE_ mpp_write_r1D_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
 #undef MPP_WRITE_RECORD_
-#define MPP_WRITE_RECORD_ call write_record_default( unit, field, size(data(:)), data, tstamp)
+#define MPP_WRITE_RECORD_ write_record_r8( unit, field, size(data(:)), data, tstamp)
 #undef MPP_RANK_
 #define MPP_RANK_ (:)
 #include <mpp_write.h>
 
 #undef MPP_WRITE_
-#define MPP_WRITE_ mpp_write_r2D
+#define MPP_WRITE_ mpp_write_r2D_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
 #undef MPP_WRITE_RECORD_
-#define MPP_WRITE_RECORD_ call write_record_default( unit, field, size(data(:,:)), data, tstamp )
+#define MPP_WRITE_RECORD_ write_record_r8( unit, field, size(data(:,:)), data, tstamp )
 #undef MPP_RANK_
 #define MPP_RANK_ (:,:)
 #include <mpp_write.h>
 
 #undef MPP_WRITE_
-#define MPP_WRITE_ mpp_write_r3D
+#define MPP_WRITE_ mpp_write_r3D_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
 #undef MPP_WRITE_RECORD_
-#define MPP_WRITE_RECORD_ call write_record_default( unit, field, size(data(:,:,:)), data, tstamp)
+#define MPP_WRITE_RECORD_ write_record_r8( unit, field, size(data(:,:,:)), data, tstamp)
 #undef MPP_RANK_
 #define MPP_RANK_ (:,:,:)
 #include <mpp_write.h>
 
 #undef MPP_WRITE_
-#define MPP_WRITE_ mpp_write_r4D
+#define MPP_WRITE_ mpp_write_r4D_r8
 #undef MPP_TYPE_
-#define MPP_TYPE_ real
+#define MPP_TYPE_ real(KIND=r8_kind)
 #undef MPP_WRITE_RECORD_
-#define MPP_WRITE_RECORD_ call write_record_default( unit, field, size(data(:,:,:,:)), data, tstamp)
+#define MPP_WRITE_RECORD_ write_record_r8( unit, field, size(data(:,:,:,:)), data, tstamp)
+#undef MPP_RANK_
+#define MPP_RANK_ (:,:,:,:)
+#include <mpp_write.h>
+
+#undef MPP_WRITE_
+#define MPP_WRITE_ mpp_write_r0D_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
+#undef MPP_RANK_
+#define MPP_RANK_ !
+#undef MPP_WRITE_RECORD_
+#define MPP_WRITE_RECORD_ write_record_r4( unit, field, 1, (/data/), tstamp)
+#include <mpp_write.h>
+
+#undef MPP_WRITE_
+#define MPP_WRITE_ mpp_write_r1D_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
+#undef MPP_WRITE_RECORD_
+#define MPP_WRITE_RECORD_ write_record_r4( unit, field, size(data(:)), data, tstamp)
+#undef MPP_RANK_
+#define MPP_RANK_ (:)
+#include <mpp_write.h>
+
+#undef MPP_WRITE_
+#define MPP_WRITE_ mpp_write_r2D_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
+#undef MPP_WRITE_RECORD_
+#define MPP_WRITE_RECORD_ write_record_r4( unit, field, size(data(:,:)), data, tstamp )
+#undef MPP_RANK_
+#define MPP_RANK_ (:,:)
+#include <mpp_write.h>
+
+#undef MPP_WRITE_
+#define MPP_WRITE_ mpp_write_r3D_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
+#undef MPP_WRITE_RECORD_
+#define MPP_WRITE_RECORD_ write_record_r4( unit, field, size(data(:,:,:)), data, tstamp)
+#undef MPP_RANK_
+#define MPP_RANK_ (:,:,:)
+#include <mpp_write.h>
+
+#undef MPP_WRITE_
+#define MPP_WRITE_ mpp_write_r4D_r4
+#undef MPP_TYPE_
+#define MPP_TYPE_ real(KIND=r4_kind)
+#undef MPP_WRITE_RECORD_
+#define MPP_WRITE_RECORD_ write_record_r4( unit, field, size(data(:,:,:,:)), data, tstamp)
 #undef MPP_RANK_
 #define MPP_RANK_ (:,:,:,:)
 #include <mpp_write.h>

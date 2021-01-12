@@ -1157,12 +1157,20 @@ private
      module procedure mpp_chksum_i4_3d_rmask
      module procedure mpp_chksum_i4_4d_rmask
      module procedure mpp_chksum_i4_5d_rmask
+
      module procedure mpp_chksum_r8_0d
      module procedure mpp_chksum_r8_1d
      module procedure mpp_chksum_r8_2d
      module procedure mpp_chksum_r8_3d
      module procedure mpp_chksum_r8_4d
      module procedure mpp_chksum_r8_5d
+
+     module procedure mpp_chksum_r4_0d
+     module procedure mpp_chksum_r4_1d
+     module procedure mpp_chksum_r4_2d
+     module procedure mpp_chksum_r4_3d
+     module procedure mpp_chksum_r4_4d
+     module procedure mpp_chksum_r4_5d
 #ifdef OVERLOAD_C8
      module procedure mpp_chksum_c8_0d
      module procedure mpp_chksum_c8_1d
@@ -1171,12 +1179,6 @@ private
      module procedure mpp_chksum_c8_4d
      module procedure mpp_chksum_c8_5d
 #endif
-     module procedure mpp_chksum_r4_0d
-     module procedure mpp_chksum_r4_1d
-     module procedure mpp_chksum_r4_2d
-     module procedure mpp_chksum_r4_3d
-     module procedure mpp_chksum_r4_4d
-     module procedure mpp_chksum_r4_5d
 #ifdef OVERLOAD_C4
      module procedure mpp_chksum_c4_0d
      module procedure mpp_chksum_c4_1d
