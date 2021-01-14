@@ -111,7 +111,7 @@ subroutine fill_coarse_data_r4(data, rotate, iadd, jadd, is_c, ie_c, js_c, je_c,
     integer, intent(in)    :: rotate, is_c, ie_c, js_c, je_c, nz, isd, jsd, iadd, jadd, nx, ny, ishift, jshift
     integer, intent(in)    :: sign1, sign2
     real(kind=r4_kind),    intent(inout) :: data(isd:, jsd:, :)
-    real(kind=r8_kind),    intent(in)    :: x_add, y_add
+    real(kind=r4_kind),    intent(in)    :: x_add, y_add
     logical, intent(in)    :: x_cyclic, y_cyclic
     integer, intent(in)    :: ieg, jeg
     integer :: i, j, k
@@ -231,7 +231,7 @@ subroutine fill_coarse_data_r4(data, rotate, iadd, jadd, is_c, ie_c, js_c, je_c,
      integer,                       intent(in) :: is, ie, js, je, nnest
      integer,                       intent(in) :: ishift, jshift
      integer, dimension(:),         intent(in) :: tile, iadd, jadd, rotate, isl, iel, jsl, jel
-     real(kind=r8_kind),                          intent(in) :: xadd, yadd
+     real(kind=r4_kind),                          intent(in) :: xadd, yadd
      integer,                       intent(in) :: sign1, sign2
      integer,                       intent(in) :: nx, ny
      integer :: i, j, k, n, nk
