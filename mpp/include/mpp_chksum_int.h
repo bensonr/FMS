@@ -19,8 +19,8 @@
 
 function MPP_CHKSUM_INT_( var, pelist, mask_val )
   integer(i8_kind) :: MPP_CHKSUM_INT_
-      MPP_TYPE_, intent(in) :: var MPP_RANK_
-      integer, optional :: pelist(:)
+  MPP_TYPE_, intent(in) :: var MPP_RANK_
+  integer, optional :: pelist(:)
   MPP_TYPE_, intent(in), optional :: mask_val
 
   if ( PRESENT(mask_val) ) then
@@ -41,14 +41,14 @@ function MPP_CHKSUM_INT_( var, pelist, mask_val )
 !Handles real mask for easier implimentation
 ! until exists full integer vartypes...
 function MPP_CHKSUM_INT_RMASK_( var, pelist, mask_val )
-  integer(i8_kind) :: MPP_CHKSUM_INT_RMASK_
+  integer(KIND=i8_kind) :: MPP_CHKSUM_INT_RMASK_
   MPP_TYPE_, intent(in) :: var MPP_RANK_
   integer, optional :: pelist(:)
   real, intent(in) :: mask_val
   integer(KIND(var))::imask_val
-  integer(i4_kind)::i4tmp(2)=0
-  real(r4_kind)::r4tmp(2)=0
-  integer(i8_kind) :: i8tmp=0
+  integer(KIND=i4_kind)::i4tmp(2)=0
+  real(KIND=r4_kind)::r4tmp(2)=0
+  integer(KIND=i8_kind) :: i8tmp=0
   !high fidelity error message
   character(LEN=1) :: tmpStr1,tmpStr2,tmpStr3
   character(LEN=32) :: tmpStr4,tmpStr5

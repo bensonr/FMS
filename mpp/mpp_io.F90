@@ -905,7 +905,7 @@ type :: atttype
 
 
   interface write_record
-     module procedure write_record_default
+     module procedure write_record_r8
      module procedure write_record_r4
   end interface
 
@@ -1084,16 +1084,23 @@ public :: mpp_io_unstructured_write
 public :: mpp_io_unstructured_read
 
 interface mpp_io_unstructured_write
-    module procedure mpp_io_unstructured_write_r_1D
-    module procedure mpp_io_unstructured_write_r_2D
-    module procedure mpp_io_unstructured_write_r_3D
-    module procedure mpp_io_unstructured_write_r_4D
+    module procedure mpp_io_unstructured_write_r8_1D
+    module procedure mpp_io_unstructured_write_r8_2D
+    module procedure mpp_io_unstructured_write_r8_3D
+    module procedure mpp_io_unstructured_write_r8_4D
+    module procedure mpp_io_unstructured_write_r4_1D
+    module procedure mpp_io_unstructured_write_r4_2D
+    module procedure mpp_io_unstructured_write_r4_3D
+    module procedure mpp_io_unstructured_write_r4_4D
 end interface mpp_io_unstructured_write
 
 interface mpp_io_unstructured_read
-    module procedure mpp_io_unstructured_read_r_1D
-    module procedure mpp_io_unstructured_read_r_2D
-    module procedure mpp_io_unstructured_read_r_3D
+    module procedure mpp_io_unstructured_read_r8_1D
+    module procedure mpp_io_unstructured_read_r8_2D
+    module procedure mpp_io_unstructured_read_r8_3D
+    module procedure mpp_io_unstructured_read_r4_1D
+    module procedure mpp_io_unstructured_read_r4_2D
+    module procedure mpp_io_unstructured_read_r4_3D
 end interface mpp_io_unstructured_read
 !----------
 

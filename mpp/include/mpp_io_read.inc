@@ -291,7 +291,7 @@
       endif
       if(nread(3) .NE. 1 .OR. nread(4) .NE. 1) call mpp_error(FATAL, &
           "mpp_io_read.inc(mpp_read_region_r2D_r8): nread(3) and nread(4) must be 1")
-      call read_record_core(unit, field, nread(1)*nread(2), data, start, nread)
+      call read_record_core_r8(unit, field, nread(1)*nread(2), data, start, nread)
 
       return
     end subroutine mpp_read_region_r2D_r8
@@ -310,7 +310,7 @@
       endif
       if(nread(4) .NE. 1) call mpp_error(FATAL, &
           "mpp_io_read.inc(mpp_read_region_r3D_r8): nread(4) must be 1")
-      call read_record_core(unit, field, nread(1)*nread(2)*nread(3), data, start, nread)
+      call read_record_core_r8(unit, field, nread(1)*nread(2)*nread(3), data, start, nread)
 
       return
     end subroutine mpp_read_region_r3D_r8

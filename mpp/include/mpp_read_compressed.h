@@ -103,7 +103,7 @@
             chk = mpp_chksum( ceiling(data), mask_val=field%fill)
          end if
       else !!real data
-         chk = mpp_chksum(data,mask_val=field%fill)
+         chk = mpp_chksum(data,mask_val=real(field%fill,KIND(data)))
       end if
 #endif
       !!compare
@@ -195,7 +195,7 @@
             chk = mpp_chksum( ceiling(data), mask_val=field%fill)
          end if
       else !!real
-         chk = mpp_chksum(data,mask_val=field%fill)
+         chk = mpp_chksum(data,mask_val=real(field%fill,KIND(data)))
       end if
 #endif
       !!compare
