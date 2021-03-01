@@ -90,7 +90,7 @@ module time_manager_mod
 ! </DATA>
 
 use platform_mod, only: r8_kind
-use constants_mod, only: rseconds_per_day=>seconds_per_day
+use constants_mod, only: dseconds_per_day=>seconds_per_day
 use fms_mod, only: error_mesg, FATAL, WARNING, write_version_number, stdout
 
 implicit none
@@ -155,7 +155,7 @@ integer, parameter :: max_type = 4
 
 ! Define number of days per month
 integer, private :: days_per_month(12) = (/31,28,31,30,31,30,31,31,30,31,30,31/)
-integer, parameter :: seconds_per_day = rseconds_per_day  ! This should automatically cast real to integer
+integer, parameter :: seconds_per_day = dseconds_per_day  ! This should automatically cast real to integer
 integer, parameter :: days_in_400_year_period = 146097    ! Used only for gregorian
 integer, dimension(days_in_400_year_period) :: coded_date ! Used only for gregorian
 integer, dimension(400,12,31) :: date_to_day              ! Used only for gregorian
@@ -260,7 +260,7 @@ contains
 !   </OUT>
 !   <IN NAME="time_string" TYPE="character">
 !     Contains days and seconds separated by a single blank.
-!     days must be integer, seconds may be integer or real.
+!     days must be integer, seconds may be integer or real(kind=r8_kind).
 !     Examples: '100 43200'  '100 43200.50'
 !   </IN>
 !   <IN NAME="allow_rounding"   TYPE="logical, optional" DEFAULT=".true.">
@@ -301,9 +301,9 @@ contains
  character(len=*), intent(out) :: err_msg
  integer            :: seconds_new, days_new, ticks_new
 
- seconds_new = seconds + floor(ticks/real(ticks_per_second))
+ seconds_new = seconds + floor(ticks/dble(ticks_per_second))
  ticks_new = modulo(ticks,ticks_per_second)
- days_new = days + floor(seconds_new/real(seconds_per_day))
+ days_new = days + floor(seconds_new/dseconds_per_day)
  seconds_new = modulo(seconds_new,seconds_per_day)
 
  if ( seconds_new < 0 .or. ticks_new < 0) then
@@ -443,7 +443,7 @@ contains
      magnitude = 10**nspf
      tpsfrac = ticks_per_second*fraction
      if(allow_rounding) then
-       tick = nint((real(tpsfrac)/magnitude))
+       tick = nint((dble(tpsfrac)/magnitude))
      else
        if(modulo(tpsfrac,magnitude) == 0) then
          tick = tpsfrac/magnitude
@@ -1050,7 +1050,7 @@ type(time_type)             :: time_scalar_mult
 type(time_type), intent(in) :: time
 integer, intent(in)         :: n
 integer                     :: days, seconds, ticks, num_sec
-double precision            :: sec_prod, tick_prod
+real(kind=r8_kind)          :: sec_prod, tick_prod
 
 if(.not.module_is_initialized) call time_manager_init
 
@@ -1064,7 +1064,7 @@ num_sec   = tick_prod/dble(ticks_per_second)
 sec_prod  = dble(time%seconds) * dble(n) + num_sec
 ticks     = tick_prod - num_sec * ticks_per_second
 
-! If sec_prod is large compared to precision of double precision, things
+! If sec_prod is large compared to precision of REAL(kind=R8_KIND), things
 ! can go bad.  Need to warn and abort on this.
 ! The same is true of tick_prod but is is more likely to happen to sec_prod,
 ! so let's just test sec_prod. (A test of tick_prod would be necessary only
@@ -1074,8 +1074,8 @@ if(sec_prod /= 0.0) then
       'Insufficient precision to handle scalar product in time_scalar_mult; contact developer',FATAL)
 end if
 
-days = sec_prod / dble(seconds_per_day)
-seconds = sec_prod - dble(days) * dble(seconds_per_day)
+days = sec_prod / dseconds_per_day
+seconds = sec_prod - dble(days) * dseconds_per_day
 
 time_scalar_mult = set_time(seconds, time%days * n + days, ticks)
 
@@ -1145,13 +1145,13 @@ function time_divide(time1, time2)
 
 integer                     :: time_divide
 type(time_type), intent(in) :: time1, time2
-double precision            :: d1, d2
+real(kind=r8_kind)          :: d1, d2
 
 if(.not.module_is_initialized) call time_manager_init
 
 ! Convert time intervals to floating point days; risky for general performance?
-d1 = time1%days * dble(seconds_per_day) + dble(time1%seconds) + time1%ticks/dble(ticks_per_second)
-d2 = time2%days * dble(seconds_per_day) + dble(time2%seconds) + time2%ticks/dble(ticks_per_second)
+d1 = time1%days * dseconds_per_day + dble(time1%seconds) + time1%ticks/dble(ticks_per_second)
+d2 = time2%days * dseconds_per_day + dble(time2%seconds) + time2%ticks/dble(ticks_per_second)
 
 ! Get integer quotient of this, check carefully to avoid round-off problems.
 time_divide = d1 / d2
@@ -1167,10 +1167,10 @@ end function time_divide
 ! <FUNCTION NAME="time_real_divide; operator(//)">
 
 !   <OVERVIEW>
-!       Returns the double precision quotient of two times.
+!       Returns the REAL(kind=R8_KIND) quotient of two times.
 !   </OVERVIEW>
 !   <DESCRIPTION>
-!       Returns the double precision quotient of two times.
+!       Returns the REAL(kind=R8_KIND) quotient of two times.
 !   </DESCRIPTION>
 !   <TEMPLATE>
 !     time1 // time2
@@ -1183,23 +1183,23 @@ end function time_divide
 !   <IN NAME="time2" UNITS="" TYPE="time_type" DIM="">
 !      A time interval.
 !   </IN>
-!   <OUT NAME="" UNITS="" TYPE="integer" DIM="double precision" DEFAULT="">
-!       Returns the double precision quotient of two times
+!   <OUT NAME="" UNITS="" TYPE="integer" DIM="REAL(kind=R8_KIND)" DEFAULT="">
+!       Returns the REAL(kind=R8_KIND) quotient of two times
 !   </OUT>
 
 function time_real_divide(time1, time2)
 
-! Returns the double precision quotient of two times
+! Returns the REAL(kind=R8_KIND) quotient of two times
 
-double precision :: time_real_divide
+real(kind=r8_kind) :: time_real_divide
 type(time_type), intent(in) :: time1, time2
-double precision :: d1, d2
+real(kind=r8_kind) :: d1, d2
 
 if(.not.module_is_initialized) call time_manager_init
 
 ! Convert time intervals to floating point seconds; risky for general performance?
-d1 = time1%days * dble(seconds_per_day) + dble(time1%seconds) + dble(time1%ticks)/dble(ticks_per_second)
-d2 = time2%days * dble(seconds_per_day) + dble(time2%seconds) + dble(time2%ticks)/dble(ticks_per_second)
+d1 = time1%days * dseconds_per_day + dble(time1%seconds) + dble(time1%ticks)/dble(ticks_per_second)
+d2 = time2%days * dseconds_per_day + dble(time2%seconds) + dble(time2%ticks)/dble(ticks_per_second)
 
 time_real_divide = d1 / d2
 
@@ -1335,7 +1335,7 @@ end function safe_rtoi
 !   <IN NAME="n" UNITS="" TYPE="integer" DIM="">
 !      An integer factor.
 !   </IN>
-!   <OUT NAME="" UNITS="" TYPE="integer" DIM="double precision" DEFAULT="">
+!   <OUT NAME="" UNITS="" TYPE="integer" DIM="REAL(kind=R8_KIND)" DEFAULT="">
 !       Returns the largest time, t, for which n * t <= time.
 !   </OUT>
 
@@ -1346,14 +1346,13 @@ function time_scalar_divide(time, n)
 type(time_type) :: time_scalar_divide
 type(time_type), intent(in) :: time
 integer, intent(in) :: n
-double precision :: d, div, dseconds_per_day, dticks_per_second
+real(kind=r8_kind) :: d, div, dticks_per_second
 integer :: days, seconds, ticks
 type(time_type) :: prod1, prod2
 character(len=128) tmp1,tmp2
 logical :: ltmp
 
 ! Convert time interval to floating point days; risky for general performance?
-dseconds_per_day  = dble(seconds_per_day)
 dticks_per_second = dble(ticks_per_second)
 d = time%days*dseconds_per_day*dticks_per_second + dble(time%seconds)*dticks_per_second + dble(time%ticks)
 div = d/dble(n)

@@ -35,6 +35,7 @@ use time_manager_mod, only: time_type, operator(+), operator(-), set_time, get_t
                             set_calendar_type, get_calendar_type, set_date, &
                             get_date, days_in_month, valid_calendar_types
 use mpp_mod,          only: input_nml_file
+use platform_mod
 
 implicit none
 private
@@ -164,23 +165,37 @@ contains
 !
 !---------------------------------------------------------------------------------------------
 
-function get_cal_time(time_increment, units, calendar, permit_calendar_conversion)
-real, intent(in) :: time_increment
+function get_cal_time(time_increment_in, units, calendar, permit_calendar_conversion)
+! interface
+class(*), intent(in) :: time_increment_in
 character(len=*), intent(in) :: units
 character(len=*), intent(in) :: calendar
 logical, intent(in), optional :: permit_calendar_conversion
 type(time_type) :: get_cal_time
+! local
+real(kind=r8_kind) :: time_increment, month_fraction, dt
 integer :: year, month, day, hour, minute, second
 integer :: i1, i2, i3, i4, i5, i6, increment_seconds, increment_days, increment_years, increment_months
-real    :: month_fraction
 integer :: calendar_tm_i, calendar_in_i, namelist_unit, ierr, io, logunit
 logical :: correct_form
 character(len=32) :: calendar_in_c
 character(len=64) :: err_msg
 character(len=4) :: formt='(i )'
 type(time_type) :: base_time, base_time_plus_one_yr, base_time_plus_one_mo
-real :: dt
 logical :: permit_conversion_local
+
+select type(time_increment_in)
+  type is (integer(i4_kind))
+     time_increment = real(time_increment_in,kind=r8_kind)
+  type is (integer(i8_kind))
+     time_increment = real(time_increment_in,kind=r8_kind)
+  type is (real(r4_kind))
+     time_increment = real(time_increment_in,kind=r8_kind)
+  type is (real(r8_kind))
+     time_increment = time_increment_in
+  class default
+     call error_mesg('get_cal_time','"time_increment" argument is not an int or real', FATAL)
+end select
 
 if(.not.module_is_initialized) then
 #ifdef INTERNAL_FILE_NML
