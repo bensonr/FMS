@@ -75,6 +75,7 @@ program test_mpp_domains
   integer :: wide_halo_x = 0, wide_halo_y = 0
   integer :: nx_cubic = 0, ny_cubic = 0
   logical :: test_nest = .false.
+  logical :: test_nest_regional = .false.
   logical :: test_performance = .false.
   logical :: test_interface = .true.
   logical :: test_edge_update = .false.
@@ -120,7 +121,8 @@ program test_mpp_domains
                                whalo, ehalo, shalo, nhalo, x_cyclic_offset, y_cyclic_offset, &
                                warn_level, wide_halo_x, wide_halo_y, nx_cubic, ny_cubic, &
                                test_performance, test_interface, num_fields, do_sleep, num_iter, &
-                               test_nest, num_nest, ntiles_nest_all, nest_level, tile_fine, tile_coarse, &
+                               test_nest, test_nest_regional, num_nest, ntiles_nest_all, nest_level, &
+                               tile_fine, tile_coarse, &
                                refine_ratio, istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, &
                                extra_halo, npes_nest_tile, cyclic_nest, mix_2D_3D, test_get_nbr, &
                                test_edge_update, test_cubic_grid_redistribute, ensemble_size, &
@@ -194,6 +196,23 @@ program test_mpp_domains
         "test_mpp_domain: check the setting of namelist variable refine_ratio")
      call test_update_nest_domain_r8('Cubic-Grid')
      call test_update_nest_domain_r4('Cubic-Grid')
+    if (mpp_pe() == mpp_root_pe())  print *, '--------------------> Finished test_update_nest_domain <-------------------'
+  endif
+
+  if( test_nest_regional .and. (num_nest>0) ) then
+    if (mpp_pe() == mpp_root_pe())  print *, '--------------------> Calling test_update_nest_domain <-------------------'
+     do n = 1, num_nest
+        if( istart_coarse(n) == 0 .OR. jstart_coarse(n) == 0 ) call mpp_error(FATAL, &
+        "test_mpp_domain: check the setting of namelist variable istart_coarse, jstart_coarse")
+        if( icount_coarse(n) == 0 .OR. jcount_coarse(n) == 0 ) call mpp_error(FATAL, &
+        "test_mpp_domain: check the setting of namelist variable icount_coarse, jcount_coarse")
+        if( tile_coarse(n) .LE. 0) call mpp_error(FATAL, &
+            "test_mpp_domain: check the setting of namelist variable tile_coarse")
+     enddo
+     if(ANY(refine_ratio(:).LT.1)) call  mpp_error(FATAL, &
+        "test_mpp_domain: check the setting of namelist variable refine_ratio")
+     call test_update_nest_domain_r8('Cubed-sphere, single face')
+     call test_update_nest_domain_r4('Cubed-sphere, single face')
     if (mpp_pe() == mpp_root_pe())  print *, '--------------------> Finished test_update_nest_domain <-------------------'
   endif
 
@@ -6055,6 +6074,7 @@ end subroutine test_halosize_update
     integer                      :: ntiles_nest_top, npes_nest_top, num_nest_level, my_npes, l
     integer                      :: npes_my_fine, npes_my_level
     integer, allocatable         :: my_pelist(:)
+    integer, dimension(1)        :: dummy
 
     x_cyclic = .false.
     y_cyclic = .false.
@@ -6090,6 +6110,21 @@ end subroutine test_halosize_update
        ny = ny_cubic
        ntiles_nest_top = 6
        cubic_grid = .true.
+    case ( 'Cubed-sphere, single face' )
+       if( nx_cubic == 0 ) then
+          call mpp_error(NOTE,'test_update_nest_domain: for Cubic_grid mosaic, nx_cubic is zero, '//&
+                  'No test is done for Cubic-Grid mosaic. ' )
+          return
+       endif
+       if( nx_cubic .NE. ny_cubic ) then
+          call mpp_error(NOTE,'test_update_nest_domain: for Cubic_grid mosaic, nx_cubic does not equal ny_cubic, '//&
+                  'No test is done for Cubic-Grid mosaic. ' )
+          return
+       endif
+       nx = nx_cubic
+       ny = ny_cubic
+       ntiles_nest_top = 1
+       cubic_grid = .false.
     case default
        call mpp_error(FATAL, 'test_update_nest_domain: no such test: '//type)
     end select
@@ -6167,6 +6202,11 @@ end subroutine test_halosize_update
        if( cubic_grid ) then
           call define_cubic_mosaic(type, domain, (/nx,nx,nx,nx,nx,nx/), (/ny,ny,ny,ny,ny,ny/), &
                                    global_indices, layout2D, pe_start, pe_end )
+       else
+          call mpp_define_mosaic(global_indices(:,1:1), layout2D(:,1:1), domain, 1, 0, dummy, dummy, &
+                 dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, &
+                 pe_start=pe_start, pe_end=pe_end, symmetry=.true., &
+                 shalo = 0, nhalo = 0, whalo = 0, ehalo = 0, tile_id=(/1/), name = type)
        endif
        call mpp_get_compute_domain(domain, isc_coarse, iec_coarse, jsc_coarse, jec_coarse)
        call mpp_get_data_domain(domain, isd_coarse, ied_coarse, jsd_coarse, jed_coarse)
@@ -7887,6 +7927,7 @@ end subroutine test_halosize_update
     integer                      :: ntiles_nest_top, npes_nest_top, num_nest_level, my_npes, l
     integer                      :: npes_my_fine, npes_my_level
     integer, allocatable         :: my_pelist(:)
+    integer, dimension(1)        :: dummy
 
     x_cyclic = .false.
     y_cyclic = .false.
@@ -7922,6 +7963,21 @@ end subroutine test_halosize_update
        ny = ny_cubic
        ntiles_nest_top = 6
        cubic_grid = .true.
+    case ( 'Cubed-sphere, single face' )
+       if( nx_cubic == 0 ) then
+          call mpp_error(NOTE,'test_update_nest_domain: for Cubic_grid mosaic, nx_cubic is zero, '//&
+                  'No test is done for Cubic-Grid mosaic. ' )
+          return
+       endif
+       if( nx_cubic .NE. ny_cubic ) then
+          call mpp_error(NOTE,'test_update_nest_domain: for Cubic_grid mosaic, nx_cubic does not equal ny_cubic, '//&
+                  'No test is done for Cubic-Grid mosaic. ' )
+          return
+       endif
+       nx = nx_cubic
+       ny = ny_cubic
+       ntiles_nest_top = 1
+       cubic_grid = .false.
     case default
        call mpp_error(FATAL, 'test_update_nest_domain: no such test: '//type)
     end select
@@ -7999,6 +8055,11 @@ end subroutine test_halosize_update
        if( cubic_grid ) then
           call define_cubic_mosaic(type, domain, (/nx,nx,nx,nx,nx,nx/), (/ny,ny,ny,ny,ny,ny/), &
                                    global_indices, layout2D, pe_start, pe_end )
+       else
+          call mpp_define_mosaic(global_indices(:,1:1), layout2D(:,1:1), domain, 1, 0, dummy, dummy, &
+                 dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, &
+                 pe_start=pe_start, pe_end=pe_end, symmetry=.true., &
+                 shalo = 0, nhalo = 0, whalo = 0, ehalo = 0, tile_id=(/1/), name = type)
        endif
        call mpp_get_compute_domain(domain, isc_coarse, iec_coarse, jsc_coarse, jec_coarse)
        call mpp_get_data_domain(domain, isd_coarse, ied_coarse, jsd_coarse, jed_coarse)
