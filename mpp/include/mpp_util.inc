@@ -1428,8 +1428,6 @@ end function rarray_to_char
     call mpp_broadcast(num_lines, from_pe, PELIST=PELIST)
     get_ascii_file_num_lines = num_lines
 
-    write(6,*) ' gafnl:',mpp_pe(), trim(FILENAME), num_lines
-
   end function get_ascii_file_num_lines
 
   !#######################################################################
@@ -1504,8 +1502,6 @@ end function rarray_to_char
     call mpp_broadcast(max_length, from_pe, PELIST=PELIST)
     get_ascii_file_num_lines_and_length(1) = num_lines
     get_ascii_file_num_lines_and_length(2) = max_length
-
-    write(6,*) 'gafnlal: ',mpp_pe(), trim(FILENAME), num_lines
 
   end function get_ascii_file_num_lines_and_length
 
